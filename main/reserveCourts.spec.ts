@@ -253,8 +253,8 @@ test('bot', async ({ page }) => {
       await page.waitForTimeout(5000)
     }
   } catch (e) {
-    console.log(e)
-    throw(e.message)
+    console.error(e.message);
+    throw e;
     // await page.pause()
   } finally {
     console.log("Finished successfully")
