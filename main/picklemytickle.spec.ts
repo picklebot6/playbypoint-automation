@@ -68,186 +68,195 @@ if (path == 'pj') {
 }
 
 test('bot', async ({ page }) => {
-  // Log out env vars
-  console.log(`Day: ${[pstDay]}`);
-  console.log(`Path: ${path}`);
-  console.log(`Courts: ${courtHierarchy}`);
-  console.log(`Times: ${desiredTimes}`);
-  console.log(`Secondary Player: ${secondary}`);
-
-  //set array for testing
-  // desiredTimes = ['2-2:30pm','2:30-3pm','3-3:30pm','3:30-4pm']
-
-  //navigate to website
-  await page.goto('https://app.playbypoint.com/users/sign_in');
-
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Sign in/);
-
-  //enter creds
-  await page.locator(selectors.usernameField).fill(username)
-  await page.locator(selectors.passwordField).fill(password)
-  await page.locator(selectors.loginButton).click()
-  await expect(page).toHaveTitle(/Home/);
-
-  //check for popup
   try {
-    await page.locator(selectors.popup).click({ timeout: 2500 })
-    console.log('popup existed and closed');
-  } catch (e) { }
+    // Log out env vars
+    console.log(`Day: ${[pstDay]}`);
+    console.log(`Path: ${path}`);
+    console.log(`Courts: ${courtHierarchy}`);
+    console.log(`Times: ${desiredTimes}`);
+    console.log(`Secondary Player: ${secondary}`);
 
-  //select facility (cerritos)
-  try {
-    await page.locator(selectors.iPickleCerritosButton).click({ timeout: 2500 })
-  } catch (e) { }
-  await page.locator(selectors.bookNow).click()
+    //set array for testing
+    // desiredTimes = ['2-2:30pm','2:30-3pm','3-3:30pm','3:30-4pm']
 
-  //select next week
-  await page.locator(functions.getXPath()).click()
-  //select pickleball
-  await page.locator(selectors.pickleballButton).click()
-  await page.waitForTimeout(5000)
+    //navigate to website
+    await page.goto('https://app.playbypoint.com/users/sign_in');
 
-  //wait for countdown
-  let count = await page.locator(selectors.messageUntilOpen).count();
-  let loopCounter = 0;
-  console.log(`instance of timer found: ${count}`)
+    // Expect a title "to contain" a substring.
+    await expect(page).toHaveTitle(/Sign in/);
 
-  while (count > 0) {
-    await page.waitForTimeout(200)
-    //check again
-    count = await page.locator(selectors.messageUntilOpen).count();
-    if (count < 1) {
-      break;
-    }
-    //get amount of time remaining
+    //enter creds
+    await page.locator(selectors.usernameField).fill(username)
+    await page.locator(selectors.passwordField).fill(password)
+    await page.locator(selectors.loginButton).click()
+    await expect(page).toHaveTitle(/Home/);
+
+    //check for popup
     try {
-      const hr = await page.$eval(selectors.hr, el => el.textContent)
-      const min = await page.$eval(selectors.min, el => el.textContent)
-      const sec = await page.$eval(selectors.sec, el => el.textContent)
-      if (loopCounter % 10 == 0) {
-        console.log(`time left remaining: ${hr}:${min}:${sec}`)
-      }
-    } catch { }
-    loopCounter++
-  }
+      await page.locator(selectors.popup).click({ timeout: 2500 })
+      console.log('popup existed and closed');
+    } catch (e) { }
 
-  await page.evaluate(() => {
-    window.scrollBy(0, window.innerHeight / 2);
-  });
-
-  //on wednesday, wait 1 sec except for jc
-  if (pstDay == 'Wed' && path != 'jc') {
-    console.log("Waiting 1 sec for JC to book first.")
-    await page.waitForTimeout(1000)
-  }
-
-  //select times
-  let selected: boolean = false
-  for (const time of desiredTimes) {
-    const locator = page.locator(functions.desiredTimePath(time));
+    //select facility (cerritos)
     try {
-      await locator.waitFor({ timeout: 100 });
-      console.log(`${time} selected`);
+      await page.locator(selectors.iPickleCerritosButton).click({ timeout: 2500 })
+    } catch (e) { }
+    await page.locator(selectors.bookNow).click()
 
-      //select time
-      await page.locator(functions.desiredTimePath(time)).click()
-      selected = true;
+    //select next week
+    await page.locator(functions.getXPath()).click()
+    //select pickleball
+    await page.locator(selectors.pickleballButton).click()
+    await page.waitForTimeout(5000)
 
-    } catch {
-      console.log(`${time} not available`);
-      if (selected) {
+    //wait for countdown
+    let count = await page.locator(selectors.messageUntilOpen).count();
+    let loopCounter = 0;
+    console.log(`instance of timer found: ${count}`)
+
+    while (count > 0) {
+      await page.waitForTimeout(200)
+      //check again
+      count = await page.locator(selectors.messageUntilOpen).count();
+      if (count < 1) {
         break;
       }
+      //get amount of time remaining
+      try {
+        const hr = await page.$eval(selectors.hr, el => el.textContent)
+        const min = await page.$eval(selectors.min, el => el.textContent)
+        const sec = await page.$eval(selectors.sec, el => el.textContent)
+        if (loopCounter % 10 == 0) {
+          console.log(`time left remaining: ${hr}:${min}:${sec}`)
+        }
+      } catch { }
+      loopCounter++
     }
-  }
-  await page.waitForTimeout(100);
 
-  let selectedCourts: string[] = []
-  //select earliest court
-  for (const court of courtHierarchy) {
-    //add selected court to other array
-    selectedCourts.push(court)
-    try {
-      await page.locator(functions.courtPath(court)).click({ timeout: 100 })
-      console.log(`Court ${court} selected`)
-      break;
-    } catch {
-      console.log(`Court ${court} not available`)
-    }
-  }
-
-  //depending on day and path
-  if (path == 'jc' && pstDay != 'Wed') {
-    console.log("Skipping JC because it's not Wednesday.")
-    //don't want the bot doing anything
-  } else {
-    //Next
-    await page.locator(selectors.nextButton).click({ timeout: 5000 })
-
-    //select number of users
-    await page.locator(selectors.twoPlayers).click({ timeout: 1000 })
-    await page.locator(selectors.addUsers).click({ timeout: 1000 })
-
-    //search users
-    await page.locator(functions.playerPath(secondary)).click({ timeout: 1000 })
-    await page.locator(selectors.userSelectionNext).click({ timeout: 1000 })
-
-    //listen for alert
-    let alertAppeared = false;
-
-    page.once('dialog', async dialog => {
-      alertAppeared = true;
-      console.log('Alert:', dialog.message());
-      await dialog.accept();
+    await page.evaluate(() => {
+      window.scrollBy(0, window.innerHeight / 2);
     });
-
-    //BOOK
-    await page.locator(selectors.bookButton).click({ timeout: 1000 })
-    await page.waitForTimeout(1000)
-
-    console.log(alertAppeared ? '❌ Alert appeared' : '✅ No alert appeared');
-
-    //check if booking worked
-    try {
-      let confirmationCount = await page.locator(selectors.confirmationNumber).count()
-      while (confirmationCount < 1 && selectedCourts.length < courtHierarchy.length) { //if booking confirmation is not found
-        //go back to court selection
-        try {
-          await page.locator(selectors.selectDateTime).click({ timeout: 5000 })
-        } catch {
-          break;  //if it errors out here, that means reservation was successful, the page just didn't load in time
-        }
-        //select a different court
-        for (const court of courtHierarchy) {
-          if (selectedCourts.includes(court)) {
-            continue
-          }
-          //add selected court to other array
-          selectedCourts.push(court)
-          try {
-            await page.locator(functions.courtPath(court)).click({ timeout: 100 })
-            console.log(`Court ${court} selected`)
-            break;
-          } catch {
-            console.log(`Court ${court} not available`)
-          }
-        }
-        //go back to book
-        await page.locator(selectors.checkout).click({ timeout: 5000 })
-        //BOOK
-        await page.locator(selectors.bookButton).click({ timeout: 5000 })
-        await page.waitForTimeout(1000)
-        confirmationCount = await page.locator(selectors.confirmationNumber).count()
-      }
-    } catch {
-      console.log("Booking may have worked, checking for true error")
+  
+    //on wednesday, wait 1 sec except for jc
+    if (pstDay == 'Wed' && path != 'jc') {
+      console.log("Waiting 1 sec for JC to book first.")
+      await page.waitForTimeout(1000)
     }
 
-    //extract confirmation number
-    let confirmationNumber = await page.$eval(selectors.confirmationNumber, el => el.textContent)
-    console.log(`Booking confirmed! Here's the confirmation number: ${confirmationNumber?.trim()}`)
-    await page.waitForTimeout(5000)
+    //select times
+    let selected: boolean = false
+    for (const time of desiredTimes) {
+      const locator = page.locator(functions.desiredTimePath(time));
+      try {
+        await locator.waitFor({ timeout: 100 });
+        console.log(`${time} selected`);
+  
+        //select time
+        await page.locator(functions.desiredTimePath(time)).click()
+        selected = true;
+
+      } catch {
+        console.log(`${time} not available`);
+        if (selected) {
+          break;
+        }
+      }
+    }
+    await page.waitForTimeout(100);
+
+    let selectedCourts: string[] = []
+    //select earliest court
+    for (const court of courtHierarchy) {
+      //add selected court to other array
+      selectedCourts.push(court)
+      try {
+        await page.locator(functions.courtPath(court)).click({ timeout: 100 })
+        console.log(`Court ${court} selected`)
+        break;
+      } catch {
+        console.log(`Court ${court} not available`)
+      }
+    }
+
+    //depending on day and path
+    if (path == 'jc' && pstDay != 'Wed') {
+      console.log("Skipping JC because it's not Wednesday.")
+      //don't want the bot doing anything
+    } else {
+      //Next
+      await page.locator(selectors.nextButton).click({ timeout: 5000 })
+
+      //select number of users
+      try {
+        await page.locator(selectors.twoPlayers).click()
+      } catch (e) {}
+      await page.locator(selectors.addUsers).click()
+
+      //search users
+      await page.locator(functions.playerPath(secondary)).click({ timeout: 1000 })
+      await page.locator(selectors.userSelectionNext).click({ timeout: 1000 })
+
+      //listen for alert
+      let alertAppeared = false;
+
+      page.once('dialog', async dialog => {
+        alertAppeared = true;
+        console.log('Alert:', dialog.message());
+        await dialog.accept();
+      });
+
+      //BOOK
+      await page.locator(selectors.bookButton).click({ timeout: 1000 })
+      await page.waitForTimeout(1000)
+
+      console.log(alertAppeared ? '❌ Alert appeared' : '✅ No alert appeared');
+
+      //check if booking worked
+      try {
+        let confirmationCount = await page.locator(selectors.confirmationNumber).count()
+        while (confirmationCount < 1 && selectedCourts.length < courtHierarchy.length) { //if booking confirmation is not found
+          //go back to court selection
+          try {
+            await page.locator(selectors.selectDateTime).click({ timeout: 5000 })
+          } catch {
+            break;  //if it errors out here, that means reservation was successful, the page just didn't load in time
+          }
+          //select a different court
+          for (const court of courtHierarchy) {
+            if (selectedCourts.includes(court)) {
+              continue
+            }
+            //add selected court to other array
+            selectedCourts.push(court)
+            try {
+              await page.locator(functions.courtPath(court)).click({ timeout: 100 })
+              console.log(`Court ${court} selected`)
+              break;
+            } catch {
+              console.log(`Court ${court} not available`)
+            }
+          }
+          //go back to book
+          await page.locator(selectors.checkout).click({ timeout: 5000 })
+          //BOOK
+          await page.locator(selectors.bookButton).click({ timeout: 5000 })
+          await page.waitForTimeout(1000)
+          confirmationCount = await page.locator(selectors.confirmationNumber).count()
+        }
+      } catch {
+        console.log("Booking may have worked, checking for true error")
+      }
+
+      //extract confirmation number
+      let confirmationNumber = await page.$eval(selectors.confirmationNumber, el => el.textContent)
+      console.log(`Booking confirmed! Here's the confirmation number: ${confirmationNumber?.trim()}`)
+      await page.waitForTimeout(5000)
+    }
+  } catch (e) {
+    console.log(e)
+    throw(e.message)
     // await page.pause()
+  } finally {
+    console.log("Finished successfully")
   }
 });
