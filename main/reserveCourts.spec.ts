@@ -85,6 +85,14 @@ test('bot', async ({ page }) => {
       //don't want the bot doing anything
     }
 
+    if (path == 'pj') {
+      await page.waitForTimeout(1000)
+    } else if (path == 'cj') {
+      await page.waitForTimeout(10000)
+    } else if (path == 'el') {
+      await page.waitForTimeout(30000)
+    }
+
     //navigate to website
     await page.goto('https://app.playbypoint.com');
 

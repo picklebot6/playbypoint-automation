@@ -6,7 +6,7 @@ on:
 jobs:
   pat-job:
     name: Pat Reservation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
@@ -51,7 +51,7 @@ jobs:
 
   chanel-job:
     name: Chanel Reservation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
@@ -96,7 +96,7 @@ jobs:
 
   elbert-job:
     name: Elbert Reservation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
@@ -140,7 +140,7 @@ jobs:
           path: test-results/**/video.webm
   justin-job:
     name: Justin Reservation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
