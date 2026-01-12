@@ -80,7 +80,7 @@ test('bot', async ({ page }) => {
     // desiredTimes = ['2-2:30pm','2:30-3pm','3-3:30pm','3:30-4pm']
 
     //navigate to website
-    await page.goto('https://app.playbypoint.com/users/sign_in');
+    await page.goto('https://app.playbypoint.com');
 
     // Expect a title "to contain" a substring.
     await expect(page).toHaveTitle(/Sign in/);
