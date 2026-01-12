@@ -21,12 +21,12 @@ jobs:
         run: npm install
 
       - name: Install Playwright Browsers
-        run: npx playwright install
+        run: npx playwright install --with-deps --with-deps
 
       - name: Run Playwright tests for Pat
         run: |
           echo "Running Playwright tests for Pat with PATH_MODE=pj"
-          PATH_MODE=pj npx playwright test
+          PATH_MODE=pj npx playwright test --workers=1 --retries=0
         env:
           MY_USERNAME: ${{ secrets.MY_USERNAME }}
           PASSWORD: ${{ secrets.PASSWORD }}
@@ -66,12 +66,12 @@ jobs:
         run: npm install
 
       - name: Install Playwright Browsers
-        run: npx playwright install
+        run: npx playwright install --with-deps
 
       - name: Run Playwright tests for Chanel
         run: |
           echo "Running Playwright tests for Chanel with PATH_MODE=cj"
-          PATH_MODE=cj npx playwright test
+          PATH_MODE=cj npx playwright test --workers=1 --retries=0
         env:
           MY_USERNAME2: ${{ secrets.MY_USERNAME2 }}
           PASSWORD2: ${{ secrets.PASSWORD2 }}
@@ -111,12 +111,12 @@ jobs:
         run: npm install
 
       - name: Install Playwright Browsers
-        run: npx playwright install
+        run: npx playwright install --with-deps
 
       - name: Run Playwright tests for Elbert
         run: |
           echo "Running Playwright tests for Elbert with PATH_MODE=el"
-          PATH_MODE=el npx playwright test
+          PATH_MODE=el npx playwright test --workers=1 --retries=0
         env:
           MY_USERNAME3: ${{ secrets.MY_USERNAME3 }}
           PASSWORD3: ${{ secrets.PASSWORD3 }}
@@ -155,12 +155,12 @@ jobs:
         run: npm install
 
       - name: Install Playwright Browsers
-        run: npx playwright install
+        run: npx playwright install --with-deps
 
       - name: Run Playwright tests for Justin
         run: |
           echo "Running Playwright tests for Justin with PATH_MODE=jc ONLY on Wed"
-          PATH_MODE=jc npx playwright test
+          PATH_MODE=jc npx playwright test --workers=1 --retries=0
         env:
           MY_USERNAME4: ${{ secrets.MY_USERNAME4 }}
           PASSWORD4: ${{ secrets.PASSWORD4 }}

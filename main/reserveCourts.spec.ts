@@ -79,6 +79,12 @@ test('bot', async ({ page }) => {
     //set array for testing
     // desiredTimes = ['2-2:30pm','2:30-3pm','3-3:30pm','3:30-4pm']
 
+    if (path == 'jc' && pstDay != 'Wed') {
+      console.log("Skipping JC because it's not Wednesday.")
+      process.exit(0)
+      //don't want the bot doing anything
+    }
+
     //navigate to website
     await page.goto('https://app.playbypoint.com');
 
