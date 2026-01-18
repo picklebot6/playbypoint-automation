@@ -15,6 +15,7 @@ let password: string;
 let courtHierarchy: string[];
 let desiredTimes: string[];
 let secondary: string;
+let error: boolean = false;
 //set creds depending on day
 if (path == 'pj') {
   //creds
@@ -190,10 +191,81 @@ test('bot', async ({ page }) => {
         await page.locator(selectors.twoPlayers).click()
       } catch (e) {}
       await page.locator(selectors.addUsers).click()
+      await page.waitForTimeout(500)
+      await page.waitForLoadState('domcontentloaded')
 
       //search users
-      await page.locator(functions.playerPath(secondary)).click({ timeout: 1000 })
-      await page.locator(selectors.userSelectionNext).click({ timeout: 1000 })
+      await page.locator(functions.playerPath(secondary)).waitFor({ timeout: 5000 })
+      await page.locator(functions.playerPath(secondary)).click()
+      try{
+        await page.locator(selectors.userSelectionNext).waitFor({timeout:2000})
+        await page.locator(selectors.userSelectionNext).click()
+      } catch (e) {
+        // refresh and try again
+        await page.reload({ waitUntil: 'domcontentloaded' });
+
+        //select next week
+        await page.locator(functions.getXPath()).click()
+        //select pickleball
+        await page.locator(selectors.pickleballButton).click()
+        //select times
+        let selected: boolean = false
+        for (const time of desiredTimes) {
+          const locator = page.locator(functions.desiredTimePath(time));
+          try {
+            await locator.waitFor({ timeout: 100 });
+            console.log(`${time} selected`);
+      
+            //select time
+            await page.locator(functions.desiredTimePath(time)).click()
+            selected = true;
+
+          } catch {
+            console.log(`${time} not available`);
+            if (selected) {
+              break;
+            }
+          }
+        }
+        await page.waitForTimeout(100);
+
+        let selectedCourts: string[] = []
+        //select earliest court
+        for (const court of courtHierarchy) {
+          //add selected court to other array
+          selectedCourts.push(court)
+          try {
+            await page.locator(functions.courtPath(court)).click({ timeout: 100 })
+            console.log(`Court ${court} selected`)
+            break;
+          } catch {
+            console.log(`Court ${court} not available`)
+          }
+        }
+
+        //depending on day and path
+        if (path == 'jc' && pstDay != 'Wed') {
+          console.log("Skipping JC because it's not Wednesday.")
+          //don't want the bot doing anything
+        } else {
+          //Next
+          await page.locator(selectors.nextButton).click({ timeout: 5000 })
+
+          //select number of users
+          try {
+            await page.locator(selectors.twoPlayers).click()
+          } catch (e) {}
+          await page.locator(selectors.addUsers).click()
+          await page.waitForTimeout(1000)
+          await page.waitForLoadState('domcontentloaded')
+
+          //search users
+          await page.locator(functions.playerPath(secondary)).waitFor({ timeout: 5000 })
+          await page.locator(functions.playerPath(secondary)).click()
+          await page.locator(selectors.userSelectionNext).waitFor({timeout:2000})
+          await page.locator(selectors.userSelectionNext).click()
+        }
+      }
 
       //listen for alert
       let alertAppeared = false;
@@ -205,7 +277,8 @@ test('bot', async ({ page }) => {
       });
 
       //BOOK
-      await page.locator(selectors.bookButton).click({ timeout: 1000 })
+      await page.locator(selectors.bookButton).waitFor({ timeout: 5000 })
+      await page.locator(selectors.bookButton).click()
       await page.waitForTimeout(1000)
 
       console.log(alertAppeared ? '❌ Alert appeared' : '✅ No alert appeared');
@@ -253,9 +326,13 @@ test('bot', async ({ page }) => {
     }
   } catch (e) {
     console.error(e.message);
-    throw e;
-    // await page.pause()
+    error = true;
+    // throw e;
   } finally {
-    console.log("Finished successfully")
+    if (error) {
+      console.log("Court could not be reserved for above reason")
+    } else {
+      console.log("Finished successfully")
+    }
   }
 });
