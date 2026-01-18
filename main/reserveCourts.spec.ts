@@ -79,20 +79,6 @@ test('bot', async ({ page }) => {
     //set array for testing
     // desiredTimes = ['2-2:30pm','2:30-3pm','3-3:30pm','3:30-4pm']
 
-    // if (path == 'jc' && pstDay != 'Wed') {
-    //   console.log("Skipping JC because it's not Wednesday.")
-    //   process.exit(0)
-    //   //don't want the bot doing anything
-    // }
-
-    // if (path == 'pj') {
-    //   await page.waitForTimeout(1000)
-    // } else if (path == 'cj') {
-    //   await page.waitForTimeout(10000)
-    // } else if (path == 'el') {
-    //   await page.waitForTimeout(30000)
-    // }
-
     //navigate to website
     await page.goto('https://app.playbypoint.com/users/sign_in');
     // Expect a title "to contain" a substring.
