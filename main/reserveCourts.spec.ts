@@ -94,8 +94,7 @@ test('bot', async ({ page }) => {
     }
 
     //navigate to website
-    await page.goto('https://app.playbypoint.com');
-
+    await page.goto('https://app.playbypoint.com/users/sign_in');
     // Expect a title "to contain" a substring.
     await expect(page).toHaveTitle(/Sign in/);
 
