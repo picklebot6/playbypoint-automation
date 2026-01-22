@@ -22,7 +22,7 @@ if (path == 'pj') {
   username = process.env.MY_USERNAME as string;
   password = process.env.PASSWORD as string;
   //court hierarachy
-  courtHierarchy = ['8', '9', '2', '1', '3', '7', '5', '4', '6', '10']
+  courtHierarchy = ['2', '3', '4', '8', '9', '1', '7', '5', '6', '10']
   //desired times
   desiredTimes = ['7:30-8pm', '8-8:30pm', '8:30-9pm', '9-9:30pm',]
   //secondary player
@@ -35,7 +35,7 @@ if (path == 'pj') {
   if (pstDay == 'Wed') {
     courtHierarchy = ['6', '2', '8', '3', '7', '5', '4', '9', '1', '10']
   } else {
-    courtHierarchy = ['3', '8', '1', '2', '5', '4', '9', '6', '7', '10']
+    courtHierarchy = ['8', '1', '2', '3', '5', '4', '9', '6', '7', '10']
   }
   //desired times
   desiredTimes = ['7:30-8pm', '8-8:30pm', '8:30-9pm', '9-9:30pm',]
@@ -52,7 +52,7 @@ if (path == 'pj') {
     courtHierarchy = ['3', '5', '1', '4', '9', '6', '2', '8', '10', '7']
   } else {
     desiredTimes = ['5:30-6pm', '6-6:30pm', '6:30-7pm', '7-7:30pm']
-    courtHierarchy = ['9', '7', '6', '1', '4', '3', '2', '8', '10', '5']
+    courtHierarchy = ['4', '3', '2', '1', '6', '9', '7', '8', '10', '5']
   }
   //secondary player
   secondary = 'Jimmy Le'
