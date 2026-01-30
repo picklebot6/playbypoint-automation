@@ -26,7 +26,11 @@ if (path == 'pj') {
   //desired times
   desiredTimes = ['7:30-8pm', '8-8:30pm', '8:30-9pm', '9-9:30pm',]
   //secondary player
-  secondary = 'Tom Tran'
+  if (pstDay == 'Sat' || pstDay == 'Sun') {
+    secondary = 'Tom Tran'
+  } else {
+    secondary = 'Paul Rodriguez'
+  }
 } else if (path == 'cj') {
   //creds
   username = process.env.MY_USERNAME2 as string;
@@ -196,7 +200,8 @@ test('bot', async ({ page }) => {
 
       //search users
       await page.locator(functions.playerPath(secondary)).waitFor({ timeout: 5000 })
-      await page.locator(functions.playerPath(secondary)).click()
+      await page.locator(functions.playerPath(secondary)).click();
+
       try{
         await page.locator(selectors.userSelectionNext).waitFor({timeout:2000})
         await page.locator(selectors.userSelectionNext).click()
