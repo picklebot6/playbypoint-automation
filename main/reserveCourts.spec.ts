@@ -27,7 +27,7 @@ if (path == 'pj') {
   desiredTimes = ['7:30-8pm', '8-8:30pm', '8:30-9pm', '9-9:30pm',]
   //secondary player
   if (pstDay == 'Sat' || pstDay == 'Sun') {
-    secondary = 'Tom Tran'
+    secondary = 'Paul Rodriguez'
   } else {
     secondary = 'Paul Rodriguez'
   }
