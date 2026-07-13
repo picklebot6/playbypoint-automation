@@ -195,7 +195,7 @@ test('bot', async ({ page }) => {
         await page.locator(selectors.twoPlayers).click()
       } catch (e) {}
       await page.locator(selectors.addUsers).click()
-      await page.waitForTimeout(500)
+      await page.waitForTimeout(2500)
       await page.waitForLoadState('domcontentloaded')
 
       //search users
@@ -206,6 +206,7 @@ test('bot', async ({ page }) => {
         await page.locator(selectors.userSelectionNext).waitFor({timeout:2000})
         await page.locator(selectors.userSelectionNext).click()
       } catch (e) {
+        await page.pause()
         // refresh and try again
         await page.reload({ waitUntil: 'domcontentloaded' });
 
