@@ -45,14 +45,14 @@ jobs:
 
       - name: Upload Zipped Pat Playwright Report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: pj-html-report
           path: pj-playwright-report.zip
 
       - name: Upload Pat Test Videos
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: pj-screen-recording
           path: test-results/**/video.webm
@@ -98,14 +98,14 @@ jobs:
 
       - name: Upload Zipped Chanel Playwright Report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cj-html-report
           path: cj-playwright-report.zip
 
       - name: Upload Chanel Test Videos
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cj-screen-recording
           path: test-results/**/video.webm
@@ -151,14 +151,14 @@ jobs:
 
       - name: Upload Elbert Playwright Report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: el-html-report
           path: el-playwright-report.zip
 
       - name: Upload Elbert Test Videos
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: el-screen-recording
           path: test-results/**/video.webm
@@ -201,14 +201,14 @@ jobs:
 
       - name: Upload Justin Playwright Report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: jc-html-report
           path: jc-playwright-report.zip
 
       - name: Upload Justin Test Videos
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: jc-screen-recording
           path: test-results/**/video.webm
